@@ -29,7 +29,7 @@ public class CommonInitializer implements Initializer {
 
             @Override
             public void accept(final Predicate<ResourceLocation> filter) {
-                if (this.run && filter.test(ForgeRegistries.ENTITIES.getRegistryName())) {
+                if (this.run && filter.test(ForgeRegistries.ENTITY_TYPES.getRegistryName())) {
                     container.addConfig(new ModConfig(ModConfig.Type.COMMON, IFConfig.spec(), container));
                     this.run = false;
                     LogicalSidedProvider.WORKQUEUE.get(EffectiveSide.get())
@@ -38,15 +38,15 @@ public class CommonInitializer implements Initializer {
             }
         });
         mod.bus().<AttachCapabilitiesEvent<Level>, Level>addGenericListener(Level.class, e ->
-            e.addCapability(new ResourceLocation(ImmersiveFarming.MOD_ID, "carts"), IFWorld.createProvider(SimpleIFWorld::new))
+            e.addCapability(ResourceLocation.fromNamespaceAndPath(ImmersiveFarming.MOD_ID, "carts"), IFWorld.createProvider(SimpleIFWorld::new))
         );
         GoalAdder.mobGoal(Mob.class)
             .add(1, PullCartGoal::new)
             .build()
             .register(mod.bus());
-        mod.bus().<TickEvent.WorldTickEvent>addListener(e -> {
+        mod.bus().<TickEvent.LevelTickEvent>addListener(e -> {
             if (e.phase == TickEvent.Phase.END) {
-                IFWorld.get(e.world).ifPresent(IFWorld::tick);
+                IFWorld.get(e.level).ifPresent(IFWorld::tick);
             }
         });
     }

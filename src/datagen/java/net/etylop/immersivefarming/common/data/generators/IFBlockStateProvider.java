@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.*;
-import net.minecraftforge.client.model.generators.loaders.OBJLoaderBuilder;
+import net.minecraftforge.client.model.generators.loaders.ObjModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -36,10 +36,10 @@ public class IFBlockStateProvider extends BlockStateProvider {
     private final BlockModelProvider customModels;
     public IFBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper)
     {
-        super(gen, ImmersiveFarming.MOD_ID, exFileHelper);
+        super(gen.getPackOutput(), ImmersiveFarming.MOD_ID, exFileHelper);
         this.exFileHelper = exFileHelper;
-        this.nongeneratedModels = new NongeneratedModels(gen, exFileHelper);
-        this.customModels = new BlockModelProvider(gen, ImmersiveFarming.MOD_ID, exFileHelper) {
+        this.nongeneratedModels = new NongeneratedModels(gen.getPackOutput(), exFileHelper);
+        this.customModels = new BlockModelProvider(gen.getPackOutput(), ImmersiveFarming.MOD_ID, exFileHelper) {
 
             protected void registerModels() {
 
@@ -76,14 +76,14 @@ public class IFBlockStateProvider extends BlockStateProvider {
         final Vec3i offset = mb.getMasterFromOriginOffset();
 
         Stream<Vec3i> partsStream = mb.getStructure(null).stream()
-                .filter(info -> !info.state.isAir())
-                .map(info -> info.pos)
+                .filter(info -> !info.state().isAir())
+                .map(info -> info.pos())
                 .map(transform)
                 .map(p -> p.subtract(offset));
 
         String name = getMultiblockPath(block) + add;
         NongeneratedModels.NongeneratedModel base = nongeneratedModels.withExistingParent(name, mcLoc("block"))
-                .customLoader(OBJLoaderBuilder::begin).modelLocation(model).detectCullableFaces(false).flipV(true).end()
+                .customLoader(ObjModelBuilder::begin).modelLocation(model).automaticCulling(false).flipV(true).end()
                 .texture("texture", texture)
                 .texture("particle", texture);
 

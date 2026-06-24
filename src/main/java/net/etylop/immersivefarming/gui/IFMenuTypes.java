@@ -1,8 +1,8 @@
 package net.etylop.immersivefarming.gui;
 
 import blusunrize.immersiveengineering.ImmersiveEngineering;
-import blusunrize.immersiveengineering.common.gui.IEBaseContainer;
-import blusunrize.immersiveengineering.common.register.IEContainerTypes;
+import blusunrize.immersiveengineering.common.gui.IEBaseContainerOld;
+import blusunrize.immersiveengineering.common.register.IEMenuTypes;
 import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.block.multiblocks.composter.ComposterBlockEntity;
 import net.etylop.immersivefarming.gui.IFMenuProvider.BEContainerIF;
@@ -24,8 +24,7 @@ import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 public class IFMenuTypes {
-    public static final DeferredRegister<MenuType<?>> REGISTER =
-            DeferredRegister.create(ForgeRegistries.CONTAINERS, ImmersiveFarming.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ImmersiveFarming.MOD_ID);
 
     public static final BEContainerIF<ComposterBlockEntity, ComposterContainer> COMPOSTER = makeMenu("composter", ComposterContainer::new);
 
@@ -44,8 +43,8 @@ public class IFMenuTypes {
         return REGISTER.register(name, () -> IForgeMenuType.create(factory));
     }
 
-    public static <T extends BlockEntity, C extends IEBaseContainer<? super T>>
-    BEContainerIF<T, C> makeMenu(String name, IEContainerTypes.BEContainerConstructor<T, C> container)
+    public static <T extends BlockEntity, C extends IEBaseContainerOld<? super T>>
+    BEContainerIF<T, C> makeMenu(String name, IEMenuTypes.ArgContainer<T, C> container)
     {
         RegistryObject<MenuType<C>> typeRef = REGISTER.register(
                 name, () -> {
@@ -54,7 +53,7 @@ public class IFMenuTypes {
                         Level world = ImmersiveEngineering.proxy.getClientWorld();
                         BlockPos pos = data.readBlockPos();
                         BlockEntity te = world.getBlockEntity(pos);
-                        return container.construct(typeBox.getValue(), windowId, inv, (T)te);
+                        return container.create(windowId, inv, (T)te);
                     });
                     typeBox.setValue(type);
                     return type;

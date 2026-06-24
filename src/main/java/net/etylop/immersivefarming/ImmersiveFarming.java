@@ -40,7 +40,7 @@ public class ImmersiveFarming {
 
     public static final Logger log = LogManager.getLogger(MOD_ID);
 
-    public static final SimpleChannel CHANNEL = new NetBuilder(new ResourceLocation(MOD_ID, "main"))
+    public static final SimpleChannel CHANNEL = new NetBuilder(ResourceLocation.fromNamespaceAndPath(MOD_ID, "main"))
             .version(1).optionalServer().requiredClient()
             .serverbound(ActionKeyMessage::new).consumer(() -> ActionKeyMessage::handle)
             .serverbound(ToggleSlowMessage::new).consumer(() -> ToggleSlowMessage::handle)

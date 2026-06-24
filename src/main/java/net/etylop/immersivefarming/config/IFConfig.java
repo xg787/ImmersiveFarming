@@ -8,7 +8,6 @@ import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -50,7 +49,7 @@ public final class IFConfig {
 
         static String referencePullAnimals() {
             return "[\n" +
-                StreamSupport.stream(ForgeRegistries.ENTITIES.spliterator(), false)
+                StreamSupport.stream(ForgeRegistries.ENTITY_TYPES.spliterator(), false)
                     .filter(type -> {
                         final Class<?> entityClass = TypeResolver.resolveRawArgument(EntityType.EntityFactory.class, Objects.requireNonNull(
                             ObfuscationReflectionHelper.getPrivateValue(EntityType.class, type, "f_20535_"),
@@ -60,7 +59,7 @@ public final class IFConfig {
                             !ItemSteerable.class.isAssignableFrom(entityClass) &&
                             !Llama.class.isAssignableFrom(entityClass); // no horse-llamas
                     })
-                    .map(ForgeRegistryEntry::getRegistryName)
+                    //.map(ForgeRegistries.ENTITY_TYPES.getRegistryName())
                     .filter(Objects::nonNull)
                     .map(type -> "    \"" + type.toString() + "\"")
                     .collect(Collectors.joining(",\n")) +

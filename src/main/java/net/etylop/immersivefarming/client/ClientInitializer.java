@@ -22,11 +22,11 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.lwjgl.glfw.GLFW;
@@ -51,7 +51,7 @@ public final class ClientInitializer extends CommonInitializer {
                 }
             }
         });
-        mod.bus().<InputEvent.KeyInputEvent>addListener(e -> {
+        mod.bus().<InputEvent.InteractionKeyMappingTriggered>addListener(e -> {
             final Minecraft mc = Minecraft.getInstance();
             final Player player = mc.player;
             if (player != null) {
@@ -64,7 +64,7 @@ public final class ClientInitializer extends CommonInitializer {
                 }
             }
         });
-        mod.bus().<ScreenOpenEvent>addListener(e -> {
+        mod.bus().<ScreenEvent.Opening>addListener(e -> {
             if (e.getScreen() instanceof InventoryScreen) {
                 final LocalPlayer player = Minecraft.getInstance().player;
             }
@@ -72,7 +72,9 @@ public final class ClientInitializer extends CommonInitializer {
         mod.modBus().<FMLClientSetupEvent>addListener(e -> {
             MenuScreens.register(IFMenuTypes.PLOW_CART.get(), PlowScreen::new);
             MenuScreens.register(IFMenuTypes.SOWER_CART.get(), SowerScreen::new);
-            ClientRegistry.registerKeyBinding(this.action);
+        });
+        mod.modBus().<RegisterKeyMappingsEvent>addListener(e -> {
+            e.register(this.action);
         });
         mod.modBus().<EntityRenderersEvent.RegisterRenderers>addListener(e -> {
             e.registerEntityRenderer(IFEntities.PLOW.get(), PlowRenderer::new);

@@ -14,6 +14,6 @@ public class IFModelLayers {
     }
 
     private static ModelLayerLocation layer(String name, String layer) {
-        return new ModelLayerLocation(new ResourceLocation(ImmersiveFarming.MOD_ID, name), layer);
+        return new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ImmersiveFarming.MOD_ID, name), layer);
     }
 }

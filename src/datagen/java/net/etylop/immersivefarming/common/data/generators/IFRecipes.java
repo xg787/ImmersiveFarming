@@ -18,14 +18,7 @@ public class IFRecipes extends RecipeProvider{
 
     protected Consumer<FinishedRecipe> out;
     public IFRecipes(DataGenerator generatorIn){
-        super(generatorIn);
-    }
-
-    @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> out){
-        this.out = out;
-
-        composterRecipes(out);
+        super(generatorIn.getPackOutput());
     }
 
     private void composterRecipes(Consumer<FinishedRecipe> out) {
@@ -47,6 +40,13 @@ public class IFRecipes extends RecipeProvider{
     }
 
     private ResourceLocation toRL(String loc) {
-        return new ResourceLocation(ImmersiveFarming.MOD_ID,"crafting/"+loc);
+        return ResourceLocation.fromNamespaceAndPath(ImmersiveFarming.MOD_ID,"crafting/"+loc);
+    }
+
+    @Override
+    protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
+        this.out = out;
+
+        composterRecipes(out);
     }
 }

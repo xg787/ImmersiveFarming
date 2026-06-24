@@ -9,7 +9,6 @@ import blusunrize.immersiveengineering.common.util.Utils;
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
 import net.etylop.immersivefarming.block.IFMultiblocks;
 import net.etylop.immersivefarming.block.multiblocks.IFTemplateMultiblock;
 import net.etylop.immersivefarming.block.utils.IFDynamicModel;
@@ -22,6 +21,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import org.joml.Quaterniond;
+import org.joml.Quaternionf;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -35,7 +36,7 @@ public class IFBasicClientProperties implements MultiblockManualData
 	@Nullable
 	private NonNullList<ItemStack> materials;
 	private final Supplier<IFDynamicModel> model;
-	private final Optional<Quaternion> rotation;
+	private final Optional<Quaternionf> rotation;
 
 	public IFBasicClientProperties(IETemplateMultiblock multiblock)
 	{
@@ -47,7 +48,7 @@ public class IFBasicClientProperties implements MultiblockManualData
 		this.multiblock = multiblock;
 		this.model = Suppliers.memoize(() -> MODELS.get(multiblock.getUniqueName()));
 		this.rotation = yRotationRadians.stream()
-				.mapToObj(r -> new Quaternion(0, (float)r, 0, false))
+				.mapToObj(r -> new Quaternionf(0, (float)r, 0, 1))
 				.findAny();
 	}
 
@@ -68,12 +69,12 @@ public class IFBasicClientProperties implements MultiblockManualData
 			for(StructureBlockInfo info : structure)
 			{
 				// Skip dummy blocks in total
-				if(info.state.hasProperty(IEProperties.MULTIBLOCKSLAVE) && info.state.getValue(IEProperties.MULTIBLOCKSLAVE))
+				if(info.state().hasProperty(IEProperties.MULTIBLOCKSLAVE) && info.state().getValue(IEProperties.MULTIBLOCKSLAVE))
 					continue;
-				ItemStack picked = Utils.getPickBlock(info.state);
+				ItemStack picked = Utils.getPickBlock(info.state());
 				boolean added = false;
 				for(ItemStack existing : materials)
-					if(ItemStack.isSame(existing, picked))
+					if(ItemStack.isSameItem(existing, picked))
 					{
 						existing.grow(1);
 						added = true;
@@ -100,9 +101,7 @@ public class IFBasicClientProperties implements MultiblockManualData
 		}
 		List<BakedQuad> nullQuads = model.get().getNullQuads();
 		VertexConsumer buffer = bufferSource.getBuffer(IERenderTypes.TRANSLUCENT_FULLBRIGHT);
-		nullQuads.forEach(quad -> buffer.putBulkData(
-				transform.last(), quad, 1, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY
-		));
+		nullQuads.forEach(quad -> buffer.putBulkData(transform.last(), quad, 1, 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, false));
 		transform.popPose();
 	}
 

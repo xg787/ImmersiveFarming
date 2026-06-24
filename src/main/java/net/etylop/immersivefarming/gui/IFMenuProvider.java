@@ -1,8 +1,8 @@
 package net.etylop.immersivefarming.gui;
 
 import blusunrize.immersiveengineering.common.blocks.IEBlockInterfaces;
-import blusunrize.immersiveengineering.common.gui.IEBaseContainer;
-import blusunrize.immersiveengineering.common.register.IEContainerTypes;
+import blusunrize.immersiveengineering.common.gui.IEBaseContainerOld;
+import blusunrize.immersiveengineering.common.register.IEMenuTypes;
 import com.google.common.base.Preconditions;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public interface IFMenuProvider<T extends BlockEntity & IFMenuProvider<T>> extends IEBlockInterfaces.IInteractionObjectIE<T>{
 
 
-    default IEContainerTypes.BEContainer<? super T, ?> getContainerType(){
+    default IEMenuTypes.ArgContainer<? super T, ?> getContainerType(){
         return null;
     }
 
@@ -33,9 +33,9 @@ public interface IFMenuProvider<T extends BlockEntity & IFMenuProvider<T>> exten
         return type.create(id, playerInventory, master);
     }
 
-    record BEContainerIF<T extends BlockEntity, C extends IEBaseContainer<? super T>> (RegistryObject<MenuType<C>> type, IEContainerTypes.BEContainerConstructor<T, C> factory){
+    record BEContainerIF<T extends BlockEntity, C extends IEBaseContainerOld<? super T>> (RegistryObject<MenuType<C>> type, IEMenuTypes.ArgContainer<T, C> factory){
         public C create(int windowId, Inventory playerInv, T tile){
-            return factory.construct(getType(), windowId, playerInv, tile);
+            return factory.create(windowId, playerInv, tile);
         }
 
         public MenuType<C> getType(){

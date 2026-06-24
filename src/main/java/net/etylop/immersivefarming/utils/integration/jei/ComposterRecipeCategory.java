@@ -1,5 +1,6 @@
 package net.etylop.immersivefarming.utils.integration.jei;
 
+import blusunrize.immersiveengineering.common.gui.IESlot;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -12,7 +13,7 @@ import net.etylop.immersivefarming.ImmersiveFarming;
 import net.etylop.immersivefarming.api.crafting.ComposterRecipe;
 import net.etylop.immersivefarming.block.IFBlocks;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidType;
 
 public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 {
@@ -36,14 +37,14 @@ public class ComposterRecipeCategory extends IFRecipeCategory<ComposterRecipe>
 					.setBackground(JEIHelper.slotDrawable, -1, -1);
 
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 100, 10)
-					.setFluidRenderer(FluidAttributes.BUCKET_VOLUME/10, false, 16, 47)
+					.setFluidRenderer(FluidType.BUCKET_VOLUME/10, false, 16, 47)
 					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput()[0])
 					.addTooltipCallback(blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper.fluidTooltipCallback)
 					.setBackground(JEIHelper.fluidDrawable, -2, -2)
 					.setOverlay(JEIHelper.fluidOverlay, -2, -2);
 
 			builder.addSlot(RecipeIngredientRole.OUTPUT, 125, 10)
-					.setFluidRenderer(FluidAttributes.BUCKET_VOLUME/10, false, 16, 47)
+					.setFluidRenderer(FluidType.BUCKET_VOLUME/10, false, 16, 47)
 					.addIngredient(ForgeTypes.FLUID_STACK, recipe.getFluidOutput()[1])
 					.addTooltipCallback(blusunrize.immersiveengineering.common.util.compat.jei.JEIHelper.fluidTooltipCallback)
 					.setBackground(JEIHelper.fluidDrawable, -2, -2)

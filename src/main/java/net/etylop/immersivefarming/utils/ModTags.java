@@ -14,21 +14,21 @@ public class ModTags {
                 tag("tillable_block");
 
         private static TagKey<Block> tag(String name) {
-            return BlockTags.create(new ResourceLocation(ImmersiveFarming.MOD_ID, name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(ImmersiveFarming.MOD_ID, name));
         }
 
         private static TagKey<Block> forgeTag(String name) {
-            return BlockTags.create(new ResourceLocation("forge", name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
         }
     }
 
     public static class Items {
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(new ResourceLocation(ImmersiveFarming.MOD_ID, name));
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(ImmersiveFarming.MOD_ID, name));
         }
 
         private static TagKey<Item> forgeTag(String name) {
-            return ItemTags.create(new ResourceLocation("forge", name));
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath("forge", name));
         }
     }
 }
